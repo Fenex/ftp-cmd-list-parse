@@ -1,6 +1,6 @@
 //! ## ftp-cmd-list-parse
 //!
-//! This is a library that can parse strings that represents answers from FTP servers by `LIST` command request.
+//! This is a library that can parse strings that FTP servers return by `LIST` command request.
 //!
 //! ```Text
 //! drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr
@@ -25,39 +25,39 @@
 //! }
 //! ```
 //!
-//! You need convert `FtpEntry` to `FtpEntryUnix ` to see additional fields that MSDOS FTP server doesn't support:
+//! You need convert `FtpEntry` to `FtpEntryUnix` to see additional fields that MSDOS FTP server doesn't support:
 //!
 //! ```rust
-//!     // also you can create `FtpEntry` by use `TryFrom` or `TryInto` traits.
-//!     use std::convert::TryFrom;
-//!     use ftp_cmd_list_parse::FtpEntry;
+//! use std::convert::TryFrom;
+//! use ftp_cmd_list_parse::FtpEntry;
 //!
-//!     # let ftp_response: &'static str = "drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr";
+//! let ftp_response: &'static str = "drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr";
 //!
-//!     if let Ok(ftp_entry) = FtpEntry::try_from(ftp_response) {
-//!         match ftp_entry.try_to_unix_type() {
-//!             Ok(ftp_entry_unix) => { // `FtpEntryUnix` type
-//!                 println!("Owner: {}", ftp_entry_unix.owner);
-//!                 println!("group: {}", ftp_entry_unix.group);
-//!                 println!("Permissions: {}", ftp_entry_unix.permissions.as_str());
-//!             },
-//!             Err(ftp_entry) => { // `FtpEntry` type
-//!                 // Here we got our `FtpEntry` back.
-//!                 println!("FtpEntry is not a UNIX-format!");
-//!             }
+//! if let Ok(ftp_entry) = FtpEntry::try_from(ftp_response) {
+//!     match ftp_entry.try_to_unix_type() {
+//!         Ok(ftp_entry_unix) => { // `FtpEntryUnix` type
+//!             println!("Owner: {}", ftp_entry_unix.owner); // "root"
+//!             println!("Group: {}", ftp_entry_unix.group); // "root"
+//!             println!("Permissions: {}", ftp_entry_unix.permissions.as_str()); // "rwxr-xr-x"
+//!         },
+//!         Err(ftp_entry) => { // `FtpEntry` type
+//!             // Here we got our `FtpEntry` back.
+//!             println!("FtpEntry is not an UNIX-format!");
 //!         }
 //!     }
+//! }
 //! ```
 //!
-//! If you ensure that you work with UNIX FTP server, you can create `FtpEntryUnix` struct directly (Or `FtpEntryMsdos` in the future):
+//! If you ensure that you work with UNIX FTP server, you can create `FtpEntryUnix` struct directly (or `FtpEntryMsdos` in the future):
 //!
 //! ```rust
 //! use ftp_cmd_list_parse::FtpEntryUnix;
-//! # let ftp_response: &'static str = "drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr";
+//!
+//! let ftp_response: &'static str = "drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr";
 //! if let Some(ftp_entry_unix) = FtpEntryUnix::new(ftp_response) {
-//!     println!("Owner: {}", ftp_entry_unix.owner);
-//!     println!("group: {}", ftp_entry_unix.group);
-//!     println!("Permissions: {}", ftp_entry_unix.permissions);
+//!     println!("Owner: {}", ftp_entry_unix.owner); // "root"
+//!     println!("Group: {}", ftp_entry_unix.group); // "root"
+//!     println!("Permissions: {}", ftp_entry_unix.permissions); // "rwxr-xr-x"
 //! }
 //! ```
 
