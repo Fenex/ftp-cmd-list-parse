@@ -20,7 +20,7 @@ lrwxrwxrwx 1 root root 51 Apr  4 23:57 www.nodeftp.github -> /etc/nginx/sites-av
 
 ## Examples:
 
-```Rust
+```rust
 use ftp_cmd_list_parse::FtpEntry;
 
 let ftp_response: &'static str = "drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr";
@@ -34,7 +34,7 @@ if let Some(ftp_entry) = FtpEntry::new(ftp_response) {
 
 You need convert `FtpEntry` to `FtpEntryUnix` to see additional fields that MSDOS FTP server doesn't support:
 
-```Rust
+```rust
 use std::convert::TryFrom; // also you can create `FtpEntry` by use `TryFrom` or `TryInto` traits.
 use ftp_cmd_list_parse::FtpEntry;
 
