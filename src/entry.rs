@@ -11,6 +11,7 @@ pub use msdos::FtpEntryMsdos;
 pub use unix::FtpEntryUnix;
 
 /// Permissions of the Unix-like entry.
+#[non_exhaustive]
 #[derive(Debug)]
 pub struct FtpEntryPermissions(String);
 
@@ -69,8 +70,8 @@ impl TryFrom<&str> for FtpEntryKind {
 
 /// All fields that supports both servers: Unix & MSDOS
 pub trait FtpEntryInfo {
-    /// Returns a new `FtpEntry` by given string if parsing was successful.
-    /// Also you can create new `FtpEntry` by use `TryFrom` trait.
+    /// Returns a new [`FtpEntry`] by given string if parsing was successful.
+    /// Also you can create new [`FtpEntry`] by use [`TryFrom`] trait.
     /// ```rust
     /// # use ftp_cmd_list_parse::FtpEntry;
     /// let ftp_response = "drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr";
@@ -91,7 +92,7 @@ pub trait FtpEntryInfo {
         Self::try_from(string).ok()
     }
 
-    /// Represents type of the entry: Directory, File, Symlink or other.
+    /// Represents type of the entry: directory, file, symlink or other.
     fn kind(&self) -> FtpEntryKind;
     /// Returns name of the entry.
     fn name(&self) -> &str;
@@ -104,7 +105,7 @@ pub trait FtpEntryInfo {
 
 /// Represents parsed string as ftp entry.
 ///
-/// Implements `Deref` to `&dyn FtpEntryInfo`, so you can get access
+/// Implements [`Deref`] to `&dyn FtpEntryInfo`, so you can get access
 /// to general fields that supports both servers: Unix & MSDOS.
 #[derive(Debug)]
 pub enum FtpEntry {
@@ -113,8 +114,8 @@ pub enum FtpEntry {
 }
 
 impl FtpEntry {
-    /// Returns a new `FtpEntry` by given string if parsing was successful.
-    /// Also you can create new `FtpEntry` by use `TryFrom` or `TryInto` traits.
+    /// Returns a new [`FtpEntry`] by given string if parsing was successful.
+    /// Also you can create new [`FtpEntry`] by use [`TryFrom`] or [`TryInto`] traits.
     /// ```rust
     /// # use ftp_cmd_list_parse::FtpEntry;
     /// let ftp_response = "drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr";
@@ -132,7 +133,7 @@ impl FtpEntry {
         string.try_into().ok()
     }
 
-    /// Returns true if `FtpEntry` has UNIX-like entry, otherwise false.
+    /// Returns true if [`FtpEntry`] has UNIX-like entry, otherwise false.
     pub fn is_unix_type(&self) -> bool {
         match self {
             FtpEntry::Unix(_) => true,
@@ -140,7 +141,7 @@ impl FtpEntry {
         }
     }
 
-    /// Returns true if `FtpEntry` has MSDOS-like entry, otherwise false.
+    /// Returns true if [`FtpEntry`] has MSDOS-like entry, otherwise false.
     pub fn is_msdos_type(&self) -> bool {
         match self {
             FtpEntry::Msdos(_) => true,
@@ -148,30 +149,30 @@ impl FtpEntry {
         }
     }
 
-    /// Converts `FtpEntry` to `FtpEntryUnix`.
+    /// Converts [`FtpEntry`] to [`FtpEntryUnix`].
     /// Its may be useful if you need to get additional infomation
     /// like permissions, group, owner and others.
     ///
     /// # Panics
     ///
     /// Panics if the value is not a Unix-like entry.
-    /// If you not sure what kind of FtpEntry is, use `try_to_unix_type` instead.
+    /// If you not sure what kind of [`FtpEntry`] is, use [`try_to_unix_type`](#method.try_to_unix_type) instead.
     pub fn to_unix_type(self) -> FtpEntryUnix {
         self.try_to_unix_type().expect("FtpEntryType missmatch")
     }
 
-    /// Converts `FtpEntry` to `FtpEntryMsdos`.
+    /// Converts [`FtpEntry`] to [`FtpEntryMsdos`].
     ///
     /// # Panics
     ///
     /// Panics if the value is not a Msdos-like entry.
-    /// If you not sure what kind of FtpEntry is, use `try_to_msdos_type` instead.
+    /// If you not sure what kind of [`FtpEntry`] is, use [`try_to_msdos_type`](#method.try_to_msdos_type) instead.
     pub fn to_msdos_type(self) -> FtpEntryMsdos {
         self.try_to_msdos_type().expect("FtpEntryType missmatch")
     }
 
-    /// Tries to convert `FtpEntry` to `FtpEntryUnix`.
-    /// If it is impossible, returns `FtpEntry `back to caller inside `Err`.
+    /// Tries to convert [`FtpEntry`] to [`FtpEntryUnix`].
+    /// If it is impossible, returns [`FtpEntry`] back to caller.
     pub fn try_to_unix_type(self) -> Result<FtpEntryUnix, Self> {
         if let FtpEntry::Unix(entry) = self {
             Ok(entry)
@@ -180,8 +181,8 @@ impl FtpEntry {
         }
     }
 
-    /// Tries to convert `FtpEntry` to `FtpEntryMsdos`.
-    /// If it is impossible, returns `FtpEntry `back to caller inside `Err`.
+    /// Tries to convert [`FtpEntry`] to [`FtpEntryMsdos`].
+    /// If it is impossible, returns [`FtpEntry`] back to caller.
     pub fn try_to_msdos_type(self) -> Result<FtpEntryMsdos, Self> {
         if let FtpEntry::Msdos(entry) = self {
             Ok(entry)

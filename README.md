@@ -1,7 +1,8 @@
-## ftp-cmd-list-parse
+# ftp-cmd-list-parse
 
 This is a Rust library that can parse strings that FTP servers return by `LIST` command request.
 
+* Unix-style:
 ```
 drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr
 brw-rw----  1 root disk    8,   0 Nov 24 10:13 sda
@@ -9,9 +10,15 @@ brw-rw----  1 root disk    8,   0 Nov 24 10:13 sda
 lrwxrwxrwx 1 root root 51 Apr  4 23:57 www.nodeftp.github -> /etc/nginx/sites-available/www.nodeftp.github
 ```
 
-Currently supports UNIX-style only. MSDOS-style is coming soon.
+* Msdos-style:
+```
+08-22-2018  02:05PM       <DIR>          wwwroot
+08-22-18  12:59PM                99710 logo.jpg
+08-22-18  03:01AM                99710 music.mp3
+```
 
-Example of use:
+
+## Examples:
 
 ```Rust
 use ftp_cmd_list_parse::FtpEntry;
@@ -28,8 +35,7 @@ if let Some(ftp_entry) = FtpEntry::new(ftp_response) {
 You need convert `FtpEntry` to `FtpEntryUnix` to see additional fields that MSDOS FTP server doesn't support:
 
 ```Rust
-// also you can create `FtpEntry` by use `TryFrom` or `TryInto` traits.
-use std::convert::TryFrom;
+use std::convert::TryFrom; // also you can create `FtpEntry` by use `TryFrom` or `TryInto` traits.
 use ftp_cmd_list_parse::FtpEntry;
 
 let ftp_response: &'static str = "drwxr-xr-x  10 root   root    4096 Dec 21  2012 usr";
@@ -46,10 +52,15 @@ if let Ok(ftp_entry) = FtpEntry::try_from(ftp_response) {
             println!("FtpEntry is not an UNIX-format!");
         }
     }
+
+    // Also you can use pattern-matching to destruct enum:
+    // if let FtpEntry::Msdos(ftp_entry_msdos) = ftp_entry {
+    //     println!("name: {}", ftp_entry_msdos.name());
+    // }
 }
 ```
 
-If you ensure that you work with UNIX FTP server, you can create `FtpEntryUnix` struct directly (Or `FtpEntryMsdos` in the future):
+If you ensure what type of FTP server using, you can create `FtpEntryUnix` or `FtpEntryMsdos` struct directly:
 
 ```rust
 use ftp_cmd_list_parse::FtpEntryUnix;
