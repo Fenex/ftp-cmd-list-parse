@@ -7,6 +7,7 @@ license = "MIT"
 description = "Parses an output of LIST ftp command"
 keywords = ["ftp"]
 categories = ["parsing"]
+repository = "https://github.com/Fenex/ftp-cmd-list-parse"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
