@@ -1,5 +1,9 @@
 # ftp-cmd-list-parse
 
+[![Latest Version](https://img.shields.io/crates/v/ftp-cmd-list-parse.svg)](https://crates.io/crates/ftp-cmd-list-parse)
+[![Latest Version](https://docs.rs/ftp-cmd-list-parse/badge.svg)](https://docs.rs/ftp-cmd-list-parse)
+[![CI Status](https://github.com/Fenex/ftp-cmd-list-parse/workflows/CI\Rust/badge.svg)](https://github.com/Fenex/ftp-cmd-list-parse/actions?workflow=CI\Rust)
+
 This is a Rust library that can parse strings that FTP servers return by `LIST` command request.
 
 * Unix-style:
